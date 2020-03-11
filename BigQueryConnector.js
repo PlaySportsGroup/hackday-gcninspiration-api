@@ -1,4 +1,6 @@
 const { BigQuery } = require("@google-cloud/bigquery");
+const NodeCache = require("node-cache");
+const dataCache = new NodeCache();
 
 class BigQueryConnector {
     constructor() {
@@ -7,6 +9,15 @@ class BigQueryConnector {
             projectId: process.env.GOOGLE_PROJECT_ID,
         });
     }
+
+    async setCache(key, data) {
+        return dataCache.set(key, data, 10000);
+    }
+
+    async getCache(key) {
+        return await dataCache.get(key);
+    }
+
     async executeQuery(selectFieldName, datasetName, tableName, whereClause) {
 
         const queryStatement = `SELECT ${selectFieldName} FROM \`${datasetName}.${tableName}\` WHERE ${whereClause}`;
@@ -23,6 +34,10 @@ class BigQueryConnector {
     }
 
     async getGcnInspirationData() {
+
+        const data = await this.getCache('posts');
+        if(data) return data;
+
         const sql = 'SELECT posts.text, Likes \
     FROM `flanders-raw-production.socialmedia_insights.postanalyticsstats` as stats \
     INNER JOIN `flanders-raw-production.socialmedia_insights.posts` as posts ON stats.post = posts.id \
@@ -34,6 +49,7 @@ class BigQueryConnector {
             const rows = await this.client.query({
                 query: sql,
             });
+            this.setCache('posts',rows[0]);
             return rows[0];
         } catch (err) {
             console.log(err);
