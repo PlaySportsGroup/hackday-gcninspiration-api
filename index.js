@@ -7,7 +7,10 @@ BigQueryConnector.getGcnInspirationData();
 
 app.get('/', async (req, res) => {
     try {
-        const data = await BigQueryConnector.getGcnInspirationData();
+        let random = true;
+        if(req.query.random === '0') random = false;
+        const data = await BigQueryConnector.getGcnInspirationData(random);
+        res.setHeader('Content-Type', 'application/json');
         return res.status(200).send(JSON.stringify(data));
     } catch (error) {
         console.log(error);
