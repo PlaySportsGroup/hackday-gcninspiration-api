@@ -1,0 +1,16 @@
+{
+  "name": "hackday-dreamwall-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "GOOGLE_APPLICATION_CREDENTIALS=./config/google.json node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/bigquery": "^4.7.0",
+    "express": "^4.17.1"
+  }
+}
