@@ -38,12 +38,12 @@ class BigQueryConnector {
         const data = await this.getCache('posts');
         if(data) return data;
 
-        const sql = 'SELECT posts.text, Likes \
+        const sql = 'SELECT posts.text, Likes, posts.type, publishedAt, posts.thumbnail_url \
     FROM `flanders-raw-production.socialmedia_insights.postanalyticsstats` as stats \
     INNER JOIN `flanders-raw-production.socialmedia_insights.posts` as posts ON stats.post = posts.id \
     CROSS JOIN UNNEST(posts.tags) as tags \
     WHERE tags = "gcninspiration" \
-    ORDER BY Likes DESC LIMIT 300';
+    ORDER BY Likes DESC LIMIT 1000';
 
         try {
             const rows = await this.client.query({

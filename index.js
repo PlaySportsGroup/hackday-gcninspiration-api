@@ -3,6 +3,7 @@ const BigQueryConnector = require('./BigQueryConnector');
 const app = express();
 
 const port = 8080;
+BigQueryConnector.getGcnInspirationData();
 
 app.get('/', async (req, res) => {
     try {
